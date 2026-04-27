@@ -1,3 +1,4 @@
+<?php include 'db.php'; ?>
 <?php
 $servername = "localhost";
 $username = "root";
