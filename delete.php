@@ -1,9 +1,19 @@
-<?php include 'db.php'; ?>
+<?php 
+include 'db.php'; 
 
-<?php
-$id = $_GET['id'];
+if (!isset($_SESSION['user'])) {
+    header("Location: registerlogin.php");
+    exit();
+}
 
-mysqli_query($conn, "DELETE FROM games WHERE id=$id");
+$id = intval($_GET['id'] ?? 0);
+
+if ($id > 0) {
+    $stmt = mysqli_prepare($conn, "DELETE FROM games WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+}
 
 header("Location: index.php");
+exit();
 ?>

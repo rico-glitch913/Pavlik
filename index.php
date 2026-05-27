@@ -1,4 +1,11 @@
-<?php include 'db.php'; ?>
+<?php 
+include 'db.php'; 
+
+if (!isset($_SESSION['user'])) {
+    header("Location: registerlogin.php");
+    exit();
+}
+?>
 
 <h2>Zoznam hier</h2>
 <a href="add.php">+ Pridať hru</a>
@@ -19,13 +26,18 @@ $sql = "SELECT games.*, categories.name AS category
 $result = mysqli_query($conn, $sql);
 
 while($row = mysqli_fetch_assoc($result)) {
+    $title    = htmlspecialchars($row['title']);
+    $year     = htmlspecialchars($row['year']);
+    $category = htmlspecialchars($row['category'] ?? '');
+    $id       = (int)$row['id'];
+
     echo "<tr>
-        <td>{$row['title']}</td>
-        <td>{$row['year']}</td>
-        <td>{$row['category']}</td>
+        <td>{$title}</td>
+        <td>{$year}</td>
+        <td>{$category}</td>
         <td>
-            <a href='edit.php?id={$row['id']}'>Edit</a>
-            <a href='delete.php?id={$row['id']}'>Delete</a>
+            <a href='edit.php?id={$id}'>Edit</a>
+            <a href='delete.php?id={$id}' onclick=\"return confirm('Naozaj vymazať?')\">Delete</a>
         </td>
     </tr>";
 }
